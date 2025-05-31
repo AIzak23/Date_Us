@@ -1,0 +1,259 @@
+.page {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.page.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.page.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Place Selection Styles */
+.selected-place {
+    transform: scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.selected-place img {
+    transform: scale(1.1);
+}
+
+/* Modal Animations */
+#crushModal {
+    transition: all 0.3s ease-in-out;
+}
+
+#crushModal.active {
+    display: flex;
+}
+
+.modal-content {
+    transition: all 0.3s ease-in-out;
+}
+
+#crushModal.active .modal-content {
+    transform: scale(1);
+}
+
+@keyframes shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-10px, 0); }
+    50% { transform: translate(10px, 0); }
+    75% { transform: translate(-10px, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+/* Hover effect for buttons */
+button {
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Modern Love Theme Styles */
+:root {
+    --primary: #FF4B91;
+    --secondary: #FF78A9;
+    --accent: #FFB6C1;
+    --background: #FFF0F5;
+    --text: #2D3748;
+}
+
+/* Floating Hearts Animation */
+.floating-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    opacity: 0;
+    animation: floatHeart 6s ease-in-out infinite;
+}
+
+.heart::before,
+.heart::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: inherit;
+}
+
+.heart::before {
+    left: -10px;
+}
+
+.heart::after {
+    top: -10px;
+}
+
+@keyframes floatHeart {
+    0% {
+        transform: rotate(45deg) translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: rotate(45deg) translateY(-100vh) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Glass Morphism Card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(120deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Hover Effects */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Button Styles */
+.love-btn {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 75, 145, 0.2);
+}
+
+.love-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 75, 145, 0.3);
+}
+
+/* Moving Background */
+.animated-bg {
+    background: linear-gradient(45deg, #FFE5E5, #FFF0F5, #FFE5E5);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Image Container */
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover {
+    transform: scale(1.02);
+}
+
+.image-container img {
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.1);
+}
+
+/* Input Styles */
+.love-input {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.love-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255, 75, 145, 0.2);
+}
+
+/* Selection Card */
+.selection-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.selection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 75, 145, 0.2);
+}
+
+.selection-card.selected {
+    border: 2px solid var(--primary);
+    background: rgba(255, 75, 145, 0.05);
+} 

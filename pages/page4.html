@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Date Type</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../styles.css" rel="stylesheet">
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            document.querySelector('.floating-hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+
+        window.onload = function() {
+            setInterval(createHeart, 300);
+        };
+    </script>
+</head>
+<body class="animated-bg min-h-screen">
+    <div class="floating-hearts"></div>
+    
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+        <div class="glass-card p-8 max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold gradient-text text-center mb-8">What kind of date? 💝</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="image-container hover-scale cursor-pointer h-80" onclick="selectDateType('Dinner Date')">
+                    <img src="../img/type/dinner.jpg" alt="Dinner Date" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div class="p-4 w-full">
+                            <p class="text-white text-2xl font-bold">Dinner Date</p>
+                            <p class="text-white/80 text-sm">Romantic Evening</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-container hover-scale cursor-pointer h-80" onclick="selectDateType('Movie')">
+                    <img src="../img/type/movie.jpg" alt="Movie Date" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div class="p-4 w-full">
+                            <p class="text-white text-2xl font-bold">Movie</p>
+                            <p class="text-white/80 text-sm">Cinema Magic</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-container hover-scale cursor-pointer h-80" onclick="selectDateType('Arcade')">
+                    <img src="../img/type/arcade.jpg" alt="Arcade Date" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div class="p-4 w-full">
+                            <p class="text-white text-2xl font-bold">Arcade</p>
+                            <p class="text-white/80 text-sm">Fun & Games</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get stored date details
+        let dateDetails = JSON.parse(localStorage.getItem('dateDetails')) || {};
+
+        function selectDateType(type) {
+            // Add selection animation
+            const cards = document.querySelectorAll('.image-container');
+            cards.forEach(card => {
+                if (card.querySelector('p').textContent === type) {
+                    card.classList.add('scale-95');
+                    setTimeout(() => card.classList.remove('scale-95'), 200);
+                }
+            });
+
+            // Save selected date type
+            dateDetails.dateType = type;
+            localStorage.setItem('dateDetails', JSON.stringify(dateDetails));
+
+            // Go to confirmation page with transition
+            setTimeout(() => {
+                window.location.href = 'page5.html';
+            }, 300);
+        }
+    </script>
+</body>
+</html> 

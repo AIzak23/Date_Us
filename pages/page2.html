@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Date & Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../styles.css" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_pink.css">
+    <style>
+        .custom-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 75, 145, 0.2);
+        }
+
+        /* Flatpickr Custom Styles */
+        .flatpickr-calendar {
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 75, 145, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .flatpickr-day.selected {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .flatpickr-day.today {
+            border-color: var(--accent);
+        }
+
+        .flatpickr-day.disabled {
+            background: rgba(255, 0, 0, 0.1) !important;
+            border-color: transparent !important;
+            color: #ff0000 !important;
+            text-decoration: line-through;
+        }
+
+        .flatpickr-time {
+            border-radius: 0 0 20px 20px;
+        }
+
+        .numInput {
+            border: 2px solid var(--accent) !important;
+            border-radius: 8px !important;
+        }
+    </style>
+</head>
+<body class="animated-bg min-h-screen">
+    <div class="floating-hearts"></div>
+    
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+        <div class="glass-card p-8 max-w-md mx-auto">
+            <h2 class="text-3xl font-bold gradient-text text-center mb-2">When are you free?</h2>
+            
+            <form class="space-y-8" onsubmit="saveDateAndTime(event)">
+                <div class="space-y-6">
+                    <div class="relative">
+                        <label class="block text-lg font-medium mb-3 text-pink-600">Pick a Date 📅</label>
+                        <input type="text" 
+                               id="dateInput" 
+                               class="custom-input"
+                               placeholder="Select date..."
+                               required>
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-lg font-medium mb-3 text-pink-600">Choose Time ⌚</label>
+                        <input type="text" 
+                               id="timeInput" 
+                               class="custom-input"
+                               placeholder="Select time..."
+                               required>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="love-btn w-full flex items-center justify-center group">
+                        <span>Next Step</span>
+                        <span class="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            document.querySelector('.floating-hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+
+        // Get stored date details
+        let dateDetails = JSON.parse(localStorage.getItem('dateDetails')) || {};
+
+        // Define unavailable dates (example: past dates and specific dates)
+        const unavailableDates = [
+            "2024-05-20", // Example unavailable date
+            "2024-05-25",
+            "2024-05-30",
+            "2024-06-01"
+        ];
+
+        // Initialize Flatpickr for date
+        const datePicker = flatpickr("#dateInput", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            disable: [
+                function(date) {
+                    // Disable weekends
+                    return (date.getDay() === 0); // Disable Sundays
+                },
+                ...unavailableDates
+            ],
+            disableMobile: false,
+            theme: "material_pink",
+            animate: true
+        });
+
+        // Initialize Flatpickr for time
+        const timePicker = flatpickr("#timeInput", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K",
+            minTime: "09:00",
+            maxTime: "22:00",
+            disableMobile: false,
+            theme: "material_pink",
+            animate: true
+        });
+
+        // Pre-fill form if we have stored values
+        window.onload = function() {
+            setInterval(createHeart, 300);
+            
+            if (dateDetails.date) {
+                datePicker.setDate(dateDetails.date);
+            }
+            if (dateDetails.time) {
+                timePicker.setDate(`2000-01-01 ${dateDetails.time}`);
+            }
+        };
+
+        function saveDateAndTime(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const date = document.getElementById('dateInput').value;
+            const time = document.getElementById('timeInput').value;
+
+            if (!date || !time) {
+                alert('Please select both date and time!');
+                return;
+            }
+
+            // Add animation class to button
+            const button = event.submitter;
+            button.classList.add('scale-95');
+            setTimeout(() => button.classList.remove('scale-95'), 200);
+
+            // Convert time to 24-hour format for storage
+            const timeDate = new Date(`2000-01-01 ${time}`);
+            const formattedTime = timeDate.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+
+            // Save to localStorage
+            dateDetails.date = date;
+            dateDetails.time = formattedTime;
+            localStorage.setItem('dateDetails', JSON.stringify(dateDetails));
+
+            // Go to next page with transition
+            setTimeout(() => {
+                window.location.href = 'page3.html';
+            }, 300);
+        }
+    </script>
+</body>
+</html> 

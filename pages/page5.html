@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Date</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../styles.css" rel="stylesheet">
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            document.querySelector('.floating-hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+
+        window.onload = function() {
+            setInterval(createHeart, 300);
+            loadDateDetails();
+        };
+    </script>
+</head>
+<body class="animated-bg min-h-screen">
+    <div class="floating-hearts"></div>
+    
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+        <div class="glass-card p-8 max-w-2xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold gradient-text">Confirm Your Date 💖</h2>
+                <p class="text-gray-600 mt-2">Almost there! Let's make sure everything is perfect.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="selection-card">
+                        <h3 class="text-xl font-semibold gradient-text mb-4">When? 📅</h3>
+                        <div class="flex items-center space-x-2 text-gray-700">
+                            <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span id="confirmDate" class="text-lg"></span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-700 mt-2">
+                            <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span id="confirmTime" class="text-lg"></span>
+                        </div>
+                    </div>
+
+                    <div class="selection-card">
+                        <h3 class="text-xl font-semibold gradient-text mb-4">Where? 📍</h3>
+                        <div class="image-container mb-4">
+                            <img id="placeImage" class="w-full h-48 object-cover" alt="Selected Place">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                                <div class="p-4">
+                                    <span id="confirmPlace" class="text-white text-xl font-bold"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="selection-card">
+                        <h3 class="text-xl font-semibold gradient-text mb-4">What type of date? 💝</h3>
+                        <div class="image-container mb-4">
+                            <img id="typeImage" class="w-full h-48 object-cover" alt="Date Type">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                                <div class="p-4">
+                                    <span id="confirmType" class="text-white text-xl font-bold"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="selection-card">
+                        <h3 class="text-xl font-semibold gradient-text mb-4">Message 💌</h3>
+                        <textarea 
+                            id="specialMessage" 
+                            class="w-full p-4 rounded-lg border border-pink-200 focus:border-pink-400 focus:ring focus:ring-pink-200 focus:ring-opacity-50 transition-all duration-300 min-h-[120px] resize-none"
+                            placeholder="Write your message here..."
+                        ></textarea>
+                    </div>
+
+                    <button onclick="confirmDate()" class="love-btn w-full flex items-center justify-center">
+                        <span>Confirm Date</span>
+                        <span class="ml-2">💝</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadDateDetails() {
+            // Get stored date details
+            let dateDetails = JSON.parse(localStorage.getItem('dateDetails')) || {};
+
+            if (!dateDetails.date || !dateDetails.time || !dateDetails.place || !dateDetails.dateType) {
+                alert('Missing date details! Please start over.');
+                window.location.href = 'page1.html';
+                return;
+            }
+
+            // Format the date nicely
+            const formattedDate = new Date(dateDetails.date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Format the time nicely
+            const formattedTime = new Date(`2000-01-01T${dateDetails.time}`).toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true
+            });
+
+            // Update the confirmation page
+            document.getElementById('confirmDate').textContent = formattedDate;
+            document.getElementById('confirmTime').textContent = formattedTime;
+            document.getElementById('confirmPlace').textContent = dateDetails.place;
+            document.getElementById('confirmType').textContent = dateDetails.dateType;
+
+            // Update images with fade-in effect
+            const placeImg = document.getElementById('placeImage');
+            const typeImg = document.getElementById('typeImage');
+            
+            placeImg.style.opacity = '0';
+            typeImg.style.opacity = '0';
+            
+            placeImg.src = `../img/places/${dateDetails.place.toLowerCase()}.jpg`;
+            typeImg.src = `../img/type/${dateDetails.dateType.toLowerCase().split(' ')[0]}.jpg`;
+            
+            setTimeout(() => {
+                placeImg.style.transition = 'opacity 0.5s ease';
+                typeImg.style.transition = 'opacity 0.5s ease';
+                placeImg.style.opacity = '1';
+                typeImg.style.opacity = '1';
+            }, 100);
+        }
+
+        function confirmDate() {
+            // Add button animation
+            const button = document.querySelector('button');
+            button.classList.add('scale-95');
+            setTimeout(() => button.classList.remove('scale-95'), 200);
+
+            // Get date details
+            const dateDetails = JSON.parse(localStorage.getItem('dateDetails'));
+            
+            // Get special message
+            const specialMessage = document.getElementById('specialMessage').value;
+
+            // Create URL parameters
+            const params = new URLSearchParams();
+            params.append('date', dateDetails.date);
+            params.append('time', dateDetails.time);
+            params.append('place', dateDetails.place);
+            params.append('dateType', dateDetails.dateType);
+            params.append('message', specialMessage);
+
+            // Clear stored data
+            localStorage.removeItem('dateDetails');
+            
+            // Go to success page with transition
+            setTimeout(() => {
+                window.location.href = '../success.html?' + params.toString();
+            }, 300);
+        }
+    </script>
+</body>
+</html> 

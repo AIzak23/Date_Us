@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Confirmed!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .bg-hearts {
+            background-image: url('data:image/svg+xml,%3Csvg width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath fill="%23f9a8d4" fill-opacity="0.15" d="M26 0C11.664 0 0 11.664 0 26s11.664 26 26 26 26-11.664 26-26S40.336 0 26 0zm0 12c7.732 0 14 6.268 14 14s-6.268 14-14 14-14-6.268-14-14 6.268-14 14-14zm0 8c-3.314 0-6 2.686-6 6s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6z"/%3E%3C/svg%3E');
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-pink-100 to-purple-100 min-h-screen bg-hearts">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full mx-auto text-center transform transition-all duration-500">
+            <img src="img/success.gif" alt="Success Celebration" class="w-64 mx-auto mb-6 rounded-lg shadow-lg">
+            <h1 class="text-4xl font-bold mb-4 text-green-600">Aysuss Crush mo gid ko ba!</h1>
+            
+            <div class="space-y-6 mb-8">
+                <div class="text-xl text-gray-700">Looking forward to our special date!</div>
+                <div class="text-2xl text-pink-500 font-medium">See you there! 💖</div>
+                
+                <div id="dateDetails" class="bg-pink-50 rounded-xl p-6 space-y-4 mt-8">
+                    <div class="text-left space-y-2">
+                        <div class="flex items-center text-pink-600">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="font-semibold">When:</span>
+                            <span id="dateTime" class="ml-2"></span>
+                        </div>
+                        
+                        <div class="flex items-center text-pink-600">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="font-semibold">Where:</span>
+                            <span id="place" class="ml-2"></span>
+                        </div>
+                        
+                        <div class="flex items-center text-pink-600">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            <span class="font-semibold">Date Type:</span>
+                            <span id="dateType" class="ml-2"></span>
+                        </div>
+
+                        <div class="flex items-center text-pink-600 mt-4">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                            <span class="font-semibold">Message:</span>
+                            <span id="message" class="ml-2 italic"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="downloadPDF()" class="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transition-all transform hover:scale-105 font-bold text-lg w-full mb-4">
+                    Download Date Details 📄
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get date details from URL parameters
+        window.onload = function() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const date = params.get('date');
+                const time = params.get('time');
+                const place = params.get('place');
+                const dateType = params.get('dateType');
+                const message = params.get('message');
+
+                // Validate parameters
+                if (!date || !time || !place || !dateType) {
+                    alert('Missing date details. Returning to main page...');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Format the date nicely
+                const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                // Format the time nicely
+                const formattedTime = new Date(`2000-01-01T${time}`).toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                });
+
+                // Display the details
+                document.getElementById('dateTime').textContent = `${formattedDate} at ${formattedTime}`;
+                document.getElementById('place').textContent = place;
+                document.getElementById('dateType').textContent = dateType;
+                document.getElementById('message').textContent = message || 'No special message';
+            } catch (error) {
+                console.error('Error loading date details:', error);
+                alert('Something went wrong. Returning to main page...');
+                window.location.href = 'index.html';
+            }
+        };
+
+        function startOver() {
+            window.location.href = 'index.html';
+        }
+
+        function downloadPDF() {
+            // Create a new div for PDF content
+            const pdfContent = document.createElement('div');
+            pdfContent.style.padding = '40px';
+            pdfContent.style.color = '#1a1a1a';
+            pdfContent.style.fontFamily = 'Arial, sans-serif';
+            
+            // Get the date details
+            const dateTime = document.getElementById('dateTime').textContent;
+            const place = document.getElementById('place').textContent;
+            const dateType = document.getElementById('dateType').textContent;
+            const message = document.getElementById('message').textContent;
+
+            // Create PDF HTML content with custom styling
+            pdfContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: #EC4899; font-size: 24px; margin-bottom: 10px;">Our Special Date ❤️</h1>
+                    <div style="width: 100%; height: 2px; background: linear-gradient(to right, #EC4899, #9333EA); margin: 20px 0;"></div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #EC4899; font-size: 18px; margin-bottom: 10px;">📅 When</h2>
+                    <p style="font-size: 16px; margin-left: 20px;">${dateTime}</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #EC4899; font-size: 18px; margin-bottom: 10px;">📍 Where</h2>
+                    <p style="font-size: 16px; margin-left: 20px;">${place}</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #EC4899; font-size: 18px; margin-bottom: 10px;">💝 Date Type</h2>
+                    <p style="font-size: 16px; margin-left: 20px;">${dateType}</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #EC4899; font-size: 18px; margin-bottom: 10px;">💌 Message</h2>
+                    <p style="font-size: 16px; margin-left: 20px; font-style: italic;">${message}</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <p style="color: #EC4899; font-size: 18px;">Looking forward to our special time together! 💖</p>
+                </div>
+            `;
+
+            // Configure PDF options
+            const opt = {
+                margin: 0.5,
+                filename: 'our-special-date.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    backgroundColor: '#ffffff'
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait'
+                }
+            };
+
+            // Generate and download PDF
+            html2pdf().set(opt).from(pdfContent).save();
+        }
+    </script>
+</body>
+</html> 

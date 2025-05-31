@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Place</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../styles.css" rel="stylesheet">
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            document.querySelector('.floating-hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+
+        window.onload = function() {
+            setInterval(createHeart, 300);
+        };
+    </script>
+</head>
+<body class="animated-bg min-h-screen">
+    <div class="floating-hearts"></div>
+    
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+        <div class="glass-card p-8 max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold gradient-text text-center mb-8">Where should we meet? 🌟</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="image-container hover-scale cursor-pointer h-80" onclick="selectPlace('Polomolok')">
+                    <img src="../img/places/polomolok.jpg" alt="Polomolok" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div class="p-4 w-full">
+                            <p class="text-white text-2xl font-bold">Polomolok</p>
+                            <p class="text-white/80 text-sm">South Cotabato's Gem</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-container hover-scale cursor-pointer h-80" onclick="selectPlace('Tupi')">
+                    <img src="../img/places/tupi.jpg" alt="Tupi" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div class="p-4 w-full">
+                            <p class="text-white text-2xl font-bold">Tupi</p>
+                            <p class="text-white/80 text-sm">Scenic Paradise</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-container hover-scale cursor-pointer h-80" onclick="selectPlace('Gensan')">
+                    <img src="../img/places/gensan.jpg" alt="Gensan" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                        <div class="p-4 w-full">
+                            <p class="text-white text-2xl font-bold">Gensan</p>
+                            <p class="text-white/80 text-sm">City of Charm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get stored date details
+        let dateDetails = JSON.parse(localStorage.getItem('dateDetails')) || {};
+
+        function selectPlace(place) {
+            // Add selection animation
+            const cards = document.querySelectorAll('.image-container');
+            cards.forEach(card => {
+                if (card.querySelector('p').textContent === place) {
+                    card.classList.add('scale-95');
+                    setTimeout(() => card.classList.remove('scale-95'), 200);
+                }
+            });
+
+            // Save selected place
+            dateDetails.place = place;
+            localStorage.setItem('dateDetails', JSON.stringify(dateDetails));
+
+            // Go to next page with transition
+            setTimeout(() => {
+                window.location.href = 'page4.html';
+            }, 300);
+        }
+    </script>
+</body>
+</html> 
